@@ -1,0 +1,1 @@
+ALTER TABLE estate ADD COLUMN point POINT GENERATED ALWAYS AS (ST_PointFromText(ST_AsText(Point(latitude, longitude))));
