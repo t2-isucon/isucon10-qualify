@@ -25,7 +25,7 @@ echo 'Restarting Go...'
 sudo systemctl stop isuumo.go.service
 cd $DIR/webapp/go/
 /home/isucon/local/go/bin/go build -o isuumo
-cp isucholar /home/isucon/webapp/go/
+cp isuumo /home/isucon/webapp/go/
 cd $DIR
 sudo systemctl restart isuumo.go.service
 echo 'Restarted!'
