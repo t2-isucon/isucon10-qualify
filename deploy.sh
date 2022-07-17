@@ -24,7 +24,7 @@ echo 'Updated config file!'
 echo 'Restarting Go...'
 sudo systemctl stop isuumo.go.service
 cd $DIR/webapp/go/
-/home/isucon/local/go/bin/go build -o isuumo
+make
 cp isuumo /home/isucon/isuumo/webapp/go/
 cd $DIR
 sudo systemctl restart isuumo.go.service
