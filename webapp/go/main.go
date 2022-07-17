@@ -180,6 +180,19 @@ func (r *RecordMapper) NextInt() int {
 	return i
 }
 
+func (r *RecordMapper) NextInt64() int64 {
+	s, err := r.next()
+	if err != nil {
+		return 0
+	}
+	i, err := strconv.ParseInt(s, 10, 64)
+	if err != nil {
+		r.err = err
+		return 0
+	}
+	return i
+}
+
 func (r *RecordMapper) NextFloat() float64 {
 	s, err := r.next()
 	if err != nil {
@@ -393,41 +406,37 @@ func postChair(c echo.Context) error {
 		return c.NoContent(http.StatusInternalServerError)
 	}
 
-	tx, err := db.BeginTx(c.Request().Context(), &sql.TxOptions{})
-	if err != nil {
-		c.Logger().Errorf("failed to begin tx: %v", err)
-		return c.NoContent(http.StatusInternalServerError)
-	}
-	defer tx.Rollback()
-	for _, row := range records {
+	chairs := make([]Chair, len(records))
+	for idx, row := range records {
 		rm := RecordMapper{Record: row}
-		id := rm.NextInt()
-		name := rm.NextString()
-		description := rm.NextString()
-		thumbnail := rm.NextString()
-		price := rm.NextInt()
-		height := rm.NextInt()
-		width := rm.NextInt()
-		depth := rm.NextInt()
-		color := rm.NextString()
-		features := rm.NextString()
-		kind := rm.NextString()
-		popularity := rm.NextInt()
-		stock := rm.NextInt()
+		chairs[idx] = Chair{
+			ID:          rm.NextInt64(),
+			Name:        rm.NextString(),
+			Description: rm.NextString(),
+			Thumbnail:   rm.NextString(),
+			Price:       rm.NextInt64(),
+			Height:      rm.NextInt64(),
+			Width:       rm.NextInt64(),
+			Depth:       rm.NextInt64(),
+			Color:       rm.NextString(),
+			Features:    rm.NextString(),
+			Kind:        rm.NextString(),
+			Popularity:  rm.NextInt64(),
+			Stock:       rm.NextInt64(),
+		}
+
 		if err := rm.Err(); err != nil {
 			c.Logger().Errorf("failed to read record: %v", err)
 			return c.NoContent(http.StatusBadRequest)
 		}
-		_, err := tx.Exec("INSERT INTO chair(id, name, description, thumbnail, price, height, width, depth, color, features, kind, popularity, stock) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)", id, name, description, thumbnail, price, height, width, depth, color, features, kind, popularity, stock)
-		if err != nil {
-			c.Logger().Errorf("failed to insert chair: %v", err)
-			return c.NoContent(http.StatusInternalServerError)
-		}
 	}
-	if err := tx.Commit(); err != nil {
-		c.Logger().Errorf("failed to commit tx: %v", err)
+
+	_, err = db.NamedExec("INSERT INTO chair(id, name, description, thumbnail, price, height, width, depth, color, features, kind, popularity, stock) VALUES (:id, :name, :description, :thumbnail, :price, :height, :width, :depth, :color, :features, :kind, :popularity, :stock)", chairs)
+	if err != nil {
+		c.Logger().Errorf("failed to insert chair: %v", err)
 		return c.NoContent(http.StatusInternalServerError)
 	}
+
 	return c.NoContent(http.StatusCreated)
 }
 
