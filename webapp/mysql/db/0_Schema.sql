@@ -17,8 +17,17 @@ CREATE TABLE isuumo.estate
     door_height INTEGER             NOT NULL,
     door_width  INTEGER             NOT NULL,
     features    VARCHAR(64)         NOT NULL,
-    popularity  INTEGER             NOT NULL
+    popularity  INTEGER             NOT NULL,
+    popularity_desc INTEGER AS (-popularity) NOT NULL,
+    g GEOMETRY AS (ST_GeometryFromText(CONCAT('POINT(', latitude, ' ', longitude, ')'))) STORED NOT NULL,
+    SPATIAL INDEX (g)
 );
+
+CREATE INDEX estate_rent ON isuumo.estate (rent);
+CREATE INDEX estate_door_height on isuumo.estate (door_height);
+CREATE INDEX estate_door_width on isuumo.estate (door_height);
+CREATE INDEX estate_laitiude_longitude on isuumo.estate (latitude, longitude);
+CREATE INDEX estate_popularity_desc_id on isuumo.estate (popularity_desc, id);
 
 CREATE TABLE isuumo.chair
 (
@@ -34,5 +43,12 @@ CREATE TABLE isuumo.chair
     features    VARCHAR(64)     NOT NULL,
     kind        VARCHAR(64)     NOT NULL,
     popularity  INTEGER         NOT NULL,
+    popularity_desc INTEGER AS (-popularity) NOT NULL,
     stock       INTEGER         NOT NULL
 );
+
+CREATE INDEX chair_price ON isuumo.chair (price);
+CREATE INDEX chair_height ON isuumo.chair (height);
+CREATE INDEX chair_width ON isuumo.chair (width);
+CREATE INDEX chair_kind_stock ON isuumo.chair (kind, stock);
+CREATE INDEX chair_popularity_desc_id on isuumo.chair (popularity_desc, id);
