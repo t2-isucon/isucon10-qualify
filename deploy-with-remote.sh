@@ -4,11 +4,11 @@ repo_path=/home/isucon/isucon10-qualify
 branch=${1:-master} # default: master
 
 echo 'running deploy to this server'
-git switch master
+git -C ${repo_path} switch master
 git -C ${repo_path} pull origin master
 git -C ${repo_path} fetch --all
 git -C ${repo_path} branch -D ${branch} || true
-git -C ${repo_path} swtich ${branch}
+git -C ${repo_path} switch ${branch}
 ${repo_path}/deploy.sh
 
 echo 'running deploy to other servers, isucon12-02 and isucon12-03'
