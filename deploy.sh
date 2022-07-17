@@ -37,5 +37,5 @@ echo 'Restarted!'
 
 echo 'Rotating files'
 sudo bash -c 'cp /var/log/nginx/access.log /var/log/nginx/access.log.$(date +%s) && echo > /var/log/nginx/access.log'
-sudo -u mysql bash -c 'test -f /var/log/mysql-slow.log && cp /var/log/mysql/mysql-slow.log /var/log/mysql/mysql-slow.log.$(date +%s) && echo > /tmp/mysql-slow.sql'
+sudo -u mysql bash -c 'test -f /var/log/mysql/mysql-slow.log && cp /var/log/mysql/mysql-slow.log /var/log/mysql/mysql-slow.log.$(date +%s) && echo > /var/log/mysql/mysql-slow.log'
 echo 'Rotated!'
