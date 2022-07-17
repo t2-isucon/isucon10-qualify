@@ -426,6 +426,10 @@ func postChair(c echo.Context) error {
 
 	chairs := make([]ChairForInsert, len(records))
 	for i, row := range records {
+		if i == 3 {
+			break
+		}
+
 		rm := RecordMapper{Record: row}
 
 		chairs[i] = ChairForInsert{
@@ -451,6 +455,8 @@ func postChair(c echo.Context) error {
 			return c.NoContent(http.StatusBadRequest)
 		}
 	}
+
+	c.Logger().Error(chairs)
 
 	_, err = db.NamedExec("INSERT INTO chair(id, name, description, thumbnail, price, height, width, depth, color, features, kind, popularity, stock) VALUES (:id, :name, :description, :thumbnail, :price, :height, :width, :depth, :color, :features, :kind, :popularity, :stock)", chairs)
 	if err != nil {
