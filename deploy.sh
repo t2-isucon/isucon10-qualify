@@ -5,7 +5,7 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
 echo 'Copy sql file...'
-sudo cp -r "$DIR/webapp/myql/db" /home/isucon/webapp/mysql/db
+sudo cp -r "$DIR/webapp/mysql/db" /home/isucon/webapp/mysql/db
 echo 'Copied sql file!'
 
 echo 'Updating config file...'
@@ -17,8 +17,8 @@ sudo cp "$DIR/nginx/nginx.conf" /etc/nginx/nginx.conf
 sudo cp "$DIR/nginx/isuumo.conf" /etc/nginx/sites-enabled/isuumo.conf
 
 # mysql
-sudo cp "$DIR/mysql/db/my.cnf" /etc/mysql/conf.d/my.cnf
-sudo cp "$DIR/mysql/db/mysqld.cnf" /etc/mysql/mysql.conf.d/mysqld.cnf
+sudo cp "$DIR/mysql/my.cnf" /etc/mysql/conf.d/my.cnf
+sudo cp "$DIR/mysql/mysqld.cnf" /etc/mysql/mysql.conf.d/mysqld.cnf
 echo 'Updated config file!'
 
 echo 'Restarting Go...'
