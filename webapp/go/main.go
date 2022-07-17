@@ -393,14 +393,15 @@ func postChair(c echo.Context) error {
 		return c.NoContent(http.StatusInternalServerError)
 	}
 
-	tx, err := db.BeginTx(c.Request().Context(), &sql.TxOptions{})
-	if err != nil {
-		c.Logger().Errorf("failed to begin tx: %v", err)
-		return c.NoContent(http.StatusInternalServerError)
+	rowNum := len(records)
+	if rowNum == 0 {
+		return c.NoContent(http.StatusCreated)
 	}
-	defer tx.Rollback()
+
+	var args []interface{}
 	for _, row := range records {
 		rm := RecordMapper{Record: row}
+
 		id := rm.NextInt()
 		name := rm.NextString()
 		description := rm.NextString()
@@ -412,22 +413,28 @@ func postChair(c echo.Context) error {
 		color := rm.NextString()
 		features := rm.NextString()
 		kind := rm.NextString()
-		popularity := rm.NextInt()
+		popularity := -rm.NextInt()
 		stock := rm.NextInt()
+
 		if err := rm.Err(); err != nil {
 			c.Logger().Errorf("failed to read record: %v", err)
 			return c.NoContent(http.StatusBadRequest)
 		}
-		_, err := tx.Exec("INSERT INTO chair(id, name, description, thumbnail, price, height, width, depth, color, features, kind, popularity, stock) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)", id, name, description, thumbnail, price, height, width, depth, color, features, kind, popularity, stock)
-		if err != nil {
-			c.Logger().Errorf("failed to insert chair: %v", err)
-			return c.NoContent(http.StatusInternalServerError)
-		}
+
+		args = append(args, id, name, description, thumbnail, price, height, width, depth, color, features, kind, popularity, stock)
 	}
-	if err := tx.Commit(); err != nil {
-		c.Logger().Errorf("failed to commit tx: %v", err)
+
+	query := "INSERT INTO chair(id, name, description, thumbnail, price, height, width, depth, color, features, kind, popularity, stock) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)"
+	for i := 1; i < rowNum; i++ {
+		query += ",(?,?,?,?,?,?,?,?,?,?,?,?,?)"
+	}
+
+	_, err = db.Exec(query, args...)
+	if err != nil {
+		c.Logger().Errorf("failed to insert chair: %v", err)
 		return c.NoContent(http.StatusInternalServerError)
 	}
+
 	return c.NoContent(http.StatusCreated)
 }
 
