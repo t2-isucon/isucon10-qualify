@@ -425,10 +425,10 @@ func postChair(c echo.Context) error {
 	}
 
 	chairs := make([]ChairForInsert, len(records))
-	for idx, row := range records {
+	for i, row := range records {
 		rm := RecordMapper{Record: row}
 
-		chairs[idx] = ChairForInsert{
+		chairs[i] = ChairForInsert{
 			ID:          rm.NextInt(),
 			Name:        rm.NextString(),
 			Description: rm.NextString(),
@@ -444,7 +444,7 @@ func postChair(c echo.Context) error {
 			Stock:       rm.NextInt(),
 		}
 
-		c.Logger().Error(chairs[idx])
+		c.Logger().Error(chairs[i])
 
 		if err := rm.Err(); err != nil {
 			c.Logger().Errorf("failed to read record: %v", err)
@@ -452,7 +452,7 @@ func postChair(c echo.Context) error {
 		}
 	}
 
-	_, err = db.NamedExec("INSERT INTO chair(id, name, description, thumbnail, price, height, width, depth, color, features, kind, popularity, stock) VALUES (:id, :name, :description, :thumbnail, :price, :height, :width, :depth, :color, :features, :kind, :popularity, :stock)", chairs)
+	_, err = db.NamedExec("INSERT INTO chair(id, name, description, thumbnail, price, height, width, depth, color, features, kind, popularity, stock) VALUES (:id, :name, :description, :thumbnail, :price, :height, :width, :depth, :color, :features, :kind, :popularity, :stock)", chairs[0])
 	if err != nil {
 		c.Logger().Errorf("failed to insert chair: %v", err)
 		return c.NoContent(http.StatusInternalServerError)
