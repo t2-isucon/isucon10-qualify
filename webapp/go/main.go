@@ -55,6 +55,22 @@ type Chair struct {
 	Stock       int64  `db:"stock" json:"-"`
 }
 
+type ChairForInsert struct {
+	ID          int    `db:"id" json:"id"`
+	Name        string `db:"name" json:"name"`
+	Description string `db:"description" json:"description"`
+	Thumbnail   string `db:"thumbnail" json:"thumbnail"`
+	Price       int    `db:"price" json:"price"`
+	Height      int    `db:"height" json:"height"`
+	Width       int    `db:"width" json:"width"`
+	Depth       int    `db:"depth" json:"depth"`
+	Color       string `db:"color" json:"color"`
+	Features    string `db:"features" json:"features"`
+	Kind        string `db:"kind" json:"kind"`
+	Popularity  int    `db:"popularity" json:"-"`
+	Stock       int    `db:"stock" json:"-"`
+}
+
 type ChairSearchResponse struct {
 	Count  int64   `json:"count"`
 	Chairs []Chair `json:"chairs"`
@@ -408,11 +424,11 @@ func postChair(c echo.Context) error {
 		return c.NoContent(http.StatusInternalServerError)
 	}
 
-	chairs := make([]Chair, len(records))
+	chairs := make([]ChairForInsert, len(records))
 	for idx, row := range records {
 		rm := RecordMapper{Record: row}
 
-		chairs[idx] = Chair{
+		chairs[idx] = ChairForInsert{
 			// ID:          rm.NextInt64(),
 			// Name:        rm.NextString(),
 			// Description: rm.NextString(),
@@ -426,7 +442,7 @@ func postChair(c echo.Context) error {
 			// Kind:        rm.NextString(),
 			// Popularity:  rm.NextInt64(),
 			// Stock:       rm.NextInt64(),
-			ID:          rm.NextInt64(),
+			ID:          rm.NextInt(),
 			Name:        "",
 			Description: "",
 			Thumbnail:   "",
