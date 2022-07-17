@@ -56,19 +56,19 @@ type Chair struct {
 }
 
 type ChairForInsert struct {
-	ID          int    `db:"id" json:"id"`
-	Name        string `db:"name" json:"name"`
-	Description string `db:"description" json:"description"`
-	Thumbnail   string `db:"thumbnail" json:"thumbnail"`
-	Price       int    `db:"price" json:"price"`
-	Height      int    `db:"height" json:"height"`
-	Width       int    `db:"width" json:"width"`
-	Depth       int    `db:"depth" json:"depth"`
-	Color       string `db:"color" json:"color"`
-	Features    string `db:"features" json:"features"`
-	Kind        string `db:"kind" json:"kind"`
-	Popularity  int    `db:"popularity" json:"-"`
-	Stock       int    `db:"stock" json:"-"`
+	ID          int    `db:"id"`
+	Name        string `db:"name"`
+	Description string `db:"description"`
+	Thumbnail   string `db:"thumbnail"`
+	Price       int    `db:"price"`
+	Height      int    `db:"height"`
+	Width       int    `db:"width"`
+	Depth       int    `db:"depth"`
+	Color       string `db:"color"`
+	Features    string `db:"features"`
+	Kind        string `db:"kind"`
+	Popularity  int    `db:"popularity"`
+	Stock       int    `db:"stock"`
 }
 
 type ChairSearchResponse struct {
