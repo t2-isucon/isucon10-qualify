@@ -389,6 +389,8 @@ func getChairDetail(c echo.Context) error {
 }
 
 func postChair(c echo.Context) error {
+	c.Logger().Error("logger test")
+
 	header, err := c.FormFile("chairs")
 	if err != nil {
 		c.Logger().Errorf("failed to get form file: %v", err)
@@ -409,6 +411,9 @@ func postChair(c echo.Context) error {
 	chairs := make([]Chair, len(records))
 	for idx, row := range records {
 		rm := RecordMapper{Record: row}
+
+		c.Logger().Error(rm.NextInt64())
+
 		chairs[idx] = Chair{
 			ID:          rm.NextInt64(),
 			Name:        rm.NextString(),
