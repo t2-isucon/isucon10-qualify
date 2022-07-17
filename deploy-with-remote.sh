@@ -1,7 +1,7 @@
 #!/bin/bash -eu
 
 repo_path=/home/isucon/isucon10-qualify
-branch=${1:-main} # default: main
+branch=${1:-master} # default: master
 
 echo 'running deploy to this server'
 git -C ${repo_path} pull origin main
