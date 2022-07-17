@@ -424,7 +424,7 @@ func postChair(c echo.Context) error {
 		return c.NoContent(http.StatusInternalServerError)
 	}
 
-	chairs := make([]ChairForInsert, len(records))
+	chairs := make([]ChairForInsert, 3)
 	for i, row := range records {
 		if i == 3 {
 			break
