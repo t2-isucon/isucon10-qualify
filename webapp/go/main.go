@@ -424,41 +424,43 @@ func postChair(c echo.Context) error {
 		return c.NoContent(http.StatusInternalServerError)
 	}
 
-	chairs := make([]ChairForInsert, 3)
-	for i, row := range records {
-		if i == 3 {
-			break
-		}
+	rowNum := len(records)
+	if rowNum == 0 {
+		return c.NoContent(http.StatusCreated)
+	}
 
+	var args []interface{}
+	for _, row := range records {
 		rm := RecordMapper{Record: row}
 
-		chairs[i] = ChairForInsert{
-			ID:          rm.NextInt(),
-			Name:        rm.NextString(),
-			Description: rm.NextString(),
-			Thumbnail:   rm.NextString(),
-			Price:       rm.NextInt(),
-			Height:      rm.NextInt(),
-			Width:       rm.NextInt(),
-			Depth:       rm.NextInt(),
-			Color:       rm.NextString(),
-			Features:    rm.NextString(),
-			Kind:        rm.NextString(),
-			Popularity:  rm.NextInt(),
-			Stock:       rm.NextInt(),
-		}
-
-		c.Logger().Error(chairs[i])
+		id := rm.NextInt()
+		name := rm.NextString()
+		description := rm.NextString()
+		thumbnail := rm.NextString()
+		price := rm.NextInt()
+		height := rm.NextInt()
+		width := rm.NextInt()
+		depth := rm.NextInt()
+		color := rm.NextString()
+		features := rm.NextString()
+		kind := rm.NextString()
+		popularity := -rm.NextInt()
+		stock := rm.NextInt()
 
 		if err := rm.Err(); err != nil {
 			c.Logger().Errorf("failed to read record: %v", err)
 			return c.NoContent(http.StatusBadRequest)
 		}
+
+		args = append(args, id, name, description, thumbnail, price, height, width, depth, color, features, kind, popularity, stock)
 	}
 
-	c.Logger().Error(chairs)
+	query := "INSERT INTO chair(id, name, description, thumbnail, price, height, width, depth, color, features, kind, popularity, stock) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)"
+	for i := 1; i < rowNum; i++ {
+		query += ",(?,?,?,?,?,?,?,?,?,?,?,?,?)"
+	}
 
-	_, err = db.NamedExec("INSERT INTO chair(id, name, description, thumbnail, price, height, width, depth, color, features, kind, popularity, stock) VALUES (:id, :name, :description, :thumbnail, :price, :height, :width, :depth, :color, :features, :kind, :popularity, :stock)", chairs)
+	_, err = db.Exec(query, args...)
 	if err != nil {
 		c.Logger().Errorf("failed to insert chair: %v", err)
 		return c.NoContent(http.StatusInternalServerError)
