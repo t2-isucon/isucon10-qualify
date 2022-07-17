@@ -5,7 +5,7 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
 echo 'Copy sql file...'
-sudo cp -r "$DIR/webapp/mysql/db" /home/isucon/isuumo/webapp/mysql/db
+sudo cp -r "$DIR/webapp/mysql/db" /home/isucon/isuumo/webapp/mysql/
 echo 'Copied sql file!'
 
 echo 'Updating config file...'
@@ -24,7 +24,7 @@ echo 'Updated config file!'
 echo 'Restarting Go...'
 sudo systemctl stop isuumo.go.service
 cd $DIR/webapp/go/
-/home/isucon/local/go/bin/go build -o isuumo
+make
 cp isuumo /home/isucon/isuumo/webapp/go/
 cd $DIR
 sudo systemctl restart isuumo.go.service
