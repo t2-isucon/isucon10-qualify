@@ -17,8 +17,8 @@ sudo cp "$DIR/nginx/nginx.conf" /etc/nginx/nginx.conf
 sudo cp "$DIR/nginx/isuumo.conf" /etc/nginx/sites-enabled/isuumo.conf
 
 # mysql
-sudo cp "$DIR/mysql/my.cnf" /etc/mysql/conf.d/my.cnf
-sudo cp "$DIR/mysql/mysqld.cnf" /etc/mysql/mysql.conf.d/mysqld.cnf
+sudo cp "$DIR/mysql/db/my.cnf" /etc/mysql/conf.d/my.cnf
+sudo cp "$DIR/mysql/db/mysqld.cnf" /etc/mysql/mysql.conf.d/mysqld.cnf
 echo 'Updated config file!'
 
 echo 'Restarting Go...'
