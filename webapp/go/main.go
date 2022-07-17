@@ -55,22 +55,6 @@ type Chair struct {
 	Stock       int64  `db:"stock" json:"-"`
 }
 
-type ChairForInsert struct {
-	ID          int    `db:"id"`
-	Name        string `db:"name"`
-	Description string `db:"description"`
-	Thumbnail   string `db:"thumbnail"`
-	Price       int    `db:"price"`
-	Height      int    `db:"height"`
-	Width       int    `db:"width"`
-	Depth       int    `db:"depth"`
-	Color       string `db:"color"`
-	Features    string `db:"features"`
-	Kind        string `db:"kind"`
-	Popularity  int    `db:"popularity"`
-	Stock       int    `db:"stock"`
-}
-
 type ChairSearchResponse struct {
 	Count  int64   `json:"count"`
 	Chairs []Chair `json:"chairs"`
@@ -189,19 +173,6 @@ func (r *RecordMapper) NextInt() int {
 		return 0
 	}
 	i, err := strconv.Atoi(s)
-	if err != nil {
-		r.err = err
-		return 0
-	}
-	return i
-}
-
-func (r *RecordMapper) NextInt64() int64 {
-	s, err := r.next()
-	if err != nil {
-		return 0
-	}
-	i, err := strconv.ParseInt(s, 10, 64)
 	if err != nil {
 		r.err = err
 		return 0
@@ -405,8 +376,6 @@ func getChairDetail(c echo.Context) error {
 }
 
 func postChair(c echo.Context) error {
-	c.Logger().Error("logger test")
-
 	header, err := c.FormFile("chairs")
 	if err != nil {
 		c.Logger().Errorf("failed to get form file: %v", err)
