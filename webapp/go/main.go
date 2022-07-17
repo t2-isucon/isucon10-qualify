@@ -412,8 +412,6 @@ func postChair(c echo.Context) error {
 	for idx, row := range records {
 		rm := RecordMapper{Record: row}
 
-		c.Logger().Error(rm.NextInt64())
-
 		chairs[idx] = Chair{
 			ID:          rm.NextInt64(),
 			Name:        rm.NextString(),
