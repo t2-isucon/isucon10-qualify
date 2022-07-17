@@ -5,7 +5,7 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
 echo 'Copy sql file...'
-sudo cp -r "$DIR/webapp/mysql/db" /home/isucon/webapp/mysql/db
+sudo cp -r "$DIR/webapp/mysql/db" /home/isucon/isuumo/webapp/mysql/db
 echo 'Copied sql file!'
 
 echo 'Updating config file...'
