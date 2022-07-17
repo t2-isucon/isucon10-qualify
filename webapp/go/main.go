@@ -425,6 +425,8 @@ func postChair(c echo.Context) error {
 			Stock:       rm.NextInt64(),
 		}
 
+		c.Logger().Error(chairs[idx])
+
 		if err := rm.Err(); err != nil {
 			c.Logger().Errorf("failed to read record: %v", err)
 			return c.NoContent(http.StatusBadRequest)
